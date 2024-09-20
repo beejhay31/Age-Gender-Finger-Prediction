@@ -1,8 +1,7 @@
-tensorflow==2.x.x
-streamlit==1.x.x
+tensorflow
+streamlit
 pillow
 numpy
 opencv-python
 PyWavelets
-streamlit
 pyngrok
