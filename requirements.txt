@@ -1,0 +1,8 @@
+tensorflow==2.x.x
+streamlit==1.x.x
+pillow
+numpy
+opencv-python
+PyWavelets
+streamlit
+pyngrok
