@@ -2,7 +2,6 @@ tensorflow
 streamlit
 pillow
 numpy
-opencv-python
+opencv-python-headless
 PyWavelets
 pyngrok
-libgl1-mesa-glx
