@@ -11,7 +11,7 @@ from tensorflow.keras.utils import to_categorical
 import os
 
 # Load the pre-trained models
-model_path = 'age_genderKnn.h5'
+model_path = 'age-genderKnn.h5'
 model_gender = load_model(model_path)
 
 # Define the KNN model for age prediction
