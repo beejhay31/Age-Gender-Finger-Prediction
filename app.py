@@ -4,10 +4,18 @@ import numpy as np
 import pywt
 import tensorflow as tf
 from tensorflow.keras.models import load_model
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+from sklearn.model_selection import KFold
+from tensorflow.keras.utils import to_categorical
+import os
 
-# Load the pre-trained model
-model_path = 'age-genderKnn.h5'
-model = load_model(model_path)
+# Load the pre-trained models
+model_path = 'age_genderKnn.h5'
+model_gender = load_model(model_path)
+
+# Define the KNN model for age prediction
+knn = KNeighborsClassifier(n_neighbors=5)
 
 # Define the specific age ranges for your clusters
 age_ranges = {
@@ -40,34 +48,22 @@ def apply_dwt(image, wavelet='haar', threshold_factor=0.04):
     denoised_image = pywt.idwt2((cA, (cH_thresh, cV_thresh, cD_thresh)), wavelet)
     denoised_image = np.clip(denoised_image, 0, 255).astype(np.uint8)
 
-    edges_horizontal = np.abs(cH_thresh)
-    edges_vertical = np.abs(cV_thresh)
-    edges_diagonal = np.abs(cD_thresh)
-
     dwt_features = np.concatenate([cA.flatten(), cH_thresh.flatten(), cV_thresh.flatten(), cD_thresh.flatten()])
     dwt_features = dwt_features / np.max(dwt_features)
 
-# Check the length of dwt_features
+    # Check the length of dwt_features
     print("Shape of dwt_features:", dwt_features.shape)
 
-    # Adjust the reshape based on the actual size of dwt_features
-    # Assuming the total size is 9984, calculate appropriate shape
     dwt_image_size = 64 * 32  # Expected shape
     if dwt_features.size != dwt_image_size:
         raise ValueError(f"Expected {dwt_image_size} elements but got {dwt_features.size}.")
 
     dwt_image = dwt_features.reshape((64, 32))
 
-    return denoised_image, edges_horizontal, edges_vertical, edges_diagonal, dwt_image
-    
-    #dwt_image = dwt_features.reshape((64, 32))
-
-    #return denoised_image, edges_horizontal, edges_vertical, edges_diagonal, dwt_image
+    return denoised_image, cH_thresh, cV_thresh, cD_thresh, dwt_image
 
 # Simulate capturing a fingerprint from a scanner
 def capture_fingerprint_from_scanner():
-    # Replace this code with the actual scanner integration
-    # Here, we'll simulate by loading a local image
     scanner_image_path = "scanner_fingerprint.bmp"  # This path would be dynamically created from the scanner
     if os.path.exists(scanner_image_path):
         image = cv2.imread(scanner_image_path, cv2.IMREAD_GRAYSCALE)
@@ -139,13 +135,20 @@ if option == "Upload Fingerprint Image" and uploaded_file is not None:
     # Resize the image
     image_resized = cv2.resize(gray_image, (64, 32))
     
-    # Keep the original image size
+    # Apply DWT
     denoised_image, edges_horizontal, edges_vertical, edges_diagonal, dwt_image = apply_dwt(image_resized)
 
     dwt_image = np.expand_dims(dwt_image, axis=-1)
     dwt_image = np.expand_dims(dwt_image, axis=0)
 
-    age_pred, gender_pred = model.predict(dwt_image)
+    # Make predictions
+    age_pred, gender_pred = model_gender.predict(dwt_image)
+    
+    # Age Prediction using KNN
+    knn_flattened_data = dwt_image.reshape(dwt_image.shape[0], -1)  # Flatten for KNN
+    age_pred_knn = knn.predict(knn_flattened_data)
+
+    # Convert predictions
     age_range_class = np.argmax(age_pred)
     age_range = age_ranges[age_range_class]
     gender = 'Male' if gender_pred < 0.5 else 'Female'
@@ -161,7 +164,14 @@ elif option == "Use Fingerprint Scanner" and image is not None:
     dwt_image = np.expand_dims(dwt_image, axis=-1)
     dwt_image = np.expand_dims(dwt_image, axis=0)
 
-    age_pred, gender_pred = model.predict(dwt_image)
+    # Make predictions
+    age_pred, gender_pred = model_gender.predict(dwt_image)
+
+    # Age Prediction using KNN
+    knn_flattened_data = dwt_image.reshape(dwt_image.shape[0], -1)  # Flatten for KNN
+    age_pred_knn = knn.predict(knn_flattened_data)
+
+    # Convert predictions
     age_range_class = np.argmax(age_pred)
     age_range = age_ranges[age_range_class]
     gender = 'Male' if gender_pred < 0.5 else 'Female'
