@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow.keras.models import load_model
 
 # Load the pre-trained model
-model_path = 'age_gender_model(7).h5'
+model_path = 'age-genderKnn.h5'
 model = load_model(model_path)
 
 # Define the specific age ranges for your clusters
