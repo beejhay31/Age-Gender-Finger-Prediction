@@ -148,7 +148,8 @@ if option == "Upload Fingerprint Image" and uploaded_file is not None:
     age_pred, gender_pred = model.predict(dwt_image)
     age_range_class = np.argmax(age_pred)
     age_range = age_ranges[age_range_class]
-    gender = 'Male' if gender_pred < 0.5 else 'Female'
+    #gender = 'Male' if gender_pred < 0.5 else 'Female'
+    gender = 'Male' if gender_pred == 0 else 'Female'
 
     st.image(image, caption="Uploaded Fingerprint Image", use_column_width=True)
     st.success(f"**Predicted Age Range:** {age_range}")
