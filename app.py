@@ -153,8 +153,8 @@ if option == "Upload Fingerprint Image" and uploaded_file is not None:
 
     # Make predictions
     gender_pred, age_pred = model.predict(dwt_image)
-    gender_pred_class = np.argmax(gender_pred, axis=1)[0]
-    age_pred_class = np.argmax(age_pred, axis=1)[0]
+    gender_pred_class = np.argmax(gender_pred, axis=1)
+    age_pred_class = np.argmax(age_pred, axis=1)
 
     # Map predicted gender and age group
     gender = 'Male' if gender_pred_class == 0 else 'Female'
@@ -179,8 +179,8 @@ elif option == "Use Fingerprint Scanner" and image is not None:
 
     # Make predictions
     gender_pred, age_pred = model.predict(dwt_image)
-    gender_pred_class = np.argmax(gender_pred, axis=1)[0]
-    age_pred_class = np.argmax(age_pred, axis=1)[0]
+    gender_pred_class = np.argmax(gender_pred, axis=1)
+    age_pred_class = np.argmax(age_pred, axis=1)
 
     # Map predicted gender and age group
     gender = 'Male' if gender_pred_class == 0 else 'Female'
