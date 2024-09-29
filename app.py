@@ -47,7 +47,7 @@ def main():
     st.write('Upload a fingerprint image to predict gender and age group.')
 
     # File uploader
-    uploaded_file = st.file_uploader("Choose a fingerprint image...", type=["jpg", "jpeg", "png"])
+    uploaded_file = st.file_uploader("Choose a fingerprint image...", type=["jpg", "jpeg", "png", "bmp"])
 
     if uploaded_file is not None:
         # Read and preprocess the image
