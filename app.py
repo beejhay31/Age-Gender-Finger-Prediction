@@ -10,7 +10,7 @@ import seaborn as sns
 # Load the pre-trained model
 @st.cache_resource
 def load_trained_model():
-    model_path = 'full_true_upgraded_age_gender_model.h5'  # Update with your model path
+    model_path = 'balanced_upgraded_age_gender_model.h5'  # Update with your model path
     return load_model(model_path)
 
 # Define the specific age ranges for your clusters
