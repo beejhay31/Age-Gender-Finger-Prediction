@@ -6,3 +6,4 @@ opencv-python-headless
 PyWavelets
 pyngrok
 scikit-learn
+matplotlib
