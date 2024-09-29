@@ -145,14 +145,24 @@ if option == "Upload Fingerprint Image" and uploaded_file is not None:
     dwt_image = np.expand_dims(dwt_image, axis=-1)
     dwt_image = np.expand_dims(dwt_image, axis=0)
 
-    age_pred, gender_pred = model.predict(dwt_image)
-    age_range_class = np.argmax(age_pred)
-    age_range = age_ranges[age_range_class]
+    #age_pred, gender_pred = model.predict(dwt_image)
+    #age_range_class = np.argmax(age_pred)
+    #age_range = age_ranges[age_range_class]
     #gender = 'Male' if gender_pred < 0.5 else 'Female'
-    gender = 'Male' if gender_pred == 0 else 'Female'
+    #gender = 'Male' if gender_pred == 0 else 'Female'
+
+    # Make predictions
+    gender_pred, age_pred = model.predict(dwt_image)
+    gender_pred_class = np.argmax(gender_pred, axis=1)[0]
+    age_pred_class = np.argmax(age_pred, axis=1)[0]
+
+    # Map predicted gender and age group
+    gender = 'Male' if gender_pred_class == 0 else 'Female'
+
+    predicted_age_range = age_ranges.get(age_pred_class, 'Unknown Age Group')
 
     st.image(image, caption="Uploaded Fingerprint Image", use_column_width=True)
-    st.success(f"**Predicted Age Range:** {age_range}")
+    st.success(f"**Predicted Age Range:** {predicted_age_range}")
     st.success(f"**Predicted Gender:** {gender}")
 
 elif option == "Use Fingerprint Scanner" and image is not None:
@@ -162,12 +172,22 @@ elif option == "Use Fingerprint Scanner" and image is not None:
     dwt_image = np.expand_dims(dwt_image, axis=-1)
     dwt_image = np.expand_dims(dwt_image, axis=0)
 
-    age_pred, gender_pred = model.predict(dwt_image)
-    age_range_class = np.argmax(age_pred)
-    age_range = age_ranges[age_range_class]
-    gender = 'Male' if gender_pred < 0.5 else 'Female'
+    #gender_pred, age_pred = model.predict(dwt_image)
+    #age_range_class = np.argmax(age_pred)
+    #age_range = age_ranges[age_range_class]
+    #gender = 'Male' if gender_pred < 0.5 else 'Female'
 
-    st.success(f"**Predicted Age Range:** {age_range}")
+    # Make predictions
+    gender_pred, age_pred = model.predict(dwt_image)
+    gender_pred_class = np.argmax(gender_pred, axis=1)[0]
+    age_pred_class = np.argmax(age_pred, axis=1)[0]
+
+    # Map predicted gender and age group
+    gender = 'Male' if gender_pred_class == 0 else 'Female'
+
+    predicted_age_range = age_ranges.get(age_pred_class, 'Unknown Age Group')
+    
+    st.success(f"**Predicted Age Range:** {predicted_age_range}")
     st.success(f"**Predicted Gender:** {gender}")
 
 # Expander for processed images
