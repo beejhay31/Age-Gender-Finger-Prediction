@@ -151,7 +151,7 @@ if option == "Upload Fingerprint Image" and uploaded_file is not None:
     #gender = 'Male' if gender_pred < 0.5 else 'Female'
     #gender = 'Male' if gender_pred == 0 else 'Female'
 
-    # Make predictions
+    """# Make predictions
     gender_pred, age_pred = model.predict(dwt_image)
     gender_pred_class = np.argmax(gender_pred, axis=1)
     age_pred_class = np.argmax(age_pred, axis=1)
@@ -159,7 +159,13 @@ if option == "Upload Fingerprint Image" and uploaded_file is not None:
     # Map predicted gender and age group
     gender = 'Male' if gender_pred_class == 0 else 'Female'
 
-    predicted_age_range = age_ranges.get(age_pred_class, 'Unknown Age Group')
+    predicted_age_range = age_ranges.get(age_pred_class, 'Unknown Age Group')"""
+
+    gender_pred, age_pred = model.predict(np.expand_dims(dwt_image, axis=0))
+
+    # Process predictions
+    gender = "Female" if gender_pred[0][1] > 0.5 else "Male"
+    age_group = age_group_map[np.argmax(age_pred[0])]
 
     st.image(image, caption="Uploaded Fingerprint Image", use_column_width=True)
     st.success(f"**Predicted Age Range:** {predicted_age_range}")
@@ -177,7 +183,7 @@ elif option == "Use Fingerprint Scanner" and image is not None:
     #age_range = age_ranges[age_range_class]
     #gender = 'Male' if gender_pred < 0.5 else 'Female'
 
-    # Make predictions
+    """# Make predictions
     gender_pred, age_pred = model.predict(dwt_image)
     gender_pred_class = np.argmax(gender_pred, axis=1)
     age_pred_class = np.argmax(age_pred, axis=1)
@@ -185,7 +191,13 @@ elif option == "Use Fingerprint Scanner" and image is not None:
     # Map predicted gender and age group
     gender = 'Male' if gender_pred_class == 0 else 'Female'
 
-    predicted_age_range = age_ranges.get(age_pred_class, 'Unknown Age Group')
+    predicted_age_range = age_ranges.get(age_pred_class, 'Unknown Age Group')"""
+
+    gender_pred, age_pred = model.predict(np.expand_dims(dwt_image, axis=0))
+
+    # Process predictions
+    gender = "Female" if gender_pred[0][1] > 0.5 else "Male"
+    age_group = age_group_map[np.argmax(age_pred[0])]
     
     st.success(f"**Predicted Age Range:** {predicted_age_range}")
     st.success(f"**Predicted Gender:** {gender}")
