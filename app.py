@@ -94,7 +94,7 @@ def main():
         fig = plot_training_history(history)
         st.sidebar.pyplot(fig)
 
-    uploaded_file = st.file_uploader("Choose a fingerprint image...", type=["jpg", "jpeg", "png"])
+    uploaded_file = st.file_uploader("Choose a fingerprint image...", type=["jpg", "jpeg", "png", "bmp"])
 
     if uploaded_file is not None:
         # Read the image using OpenCV
