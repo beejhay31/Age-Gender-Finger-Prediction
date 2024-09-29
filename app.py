@@ -159,7 +159,9 @@ if option == "Upload Fingerprint Image" and uploaded_file is not None:
     # Map predicted gender and age group
     gender = 'Male' if gender_pred_class == 0 else 'Female'
 
-    predicted_age_range = age_ranges[age_pred_class]
+    predicted_age_range = [age_ranges[label] for label in age_pred_class]
+    
+    #predicted_age_range = age_ranges[age_pred_class]
 
     #gender_pred, age_pred = model.predict(np.expand_dims(dwt_image, axis=0))
 
@@ -191,8 +193,10 @@ elif option == "Use Fingerprint Scanner" and image is not None:
     # Map predicted gender and age group
     gender = 'Male' if gender_pred_class == 0 else 'Female'
 
+    predicted_age_range = [age_ranges[label] for label in age_pred_class]
+    
     #predicted_age_range = age_ranges.get(age_pred_class, 'Unknown Age Group')
-    predicted_age_range = age_ranges[age_pred_class]
+    #predicted_age_range = age_ranges[age_pred_class]
 
     #gender_pred, age_pred = model.predict(np.expand_dims(dwt_image, axis=0))
 
